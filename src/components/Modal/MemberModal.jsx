@@ -55,6 +55,10 @@ const MemberModal = ({ selectedMember, onClose }) => {
     // setCheckComplete(true);
   }
 
+  function handleDenialNote() {
+    submitNote(member.id, "Denial of Entry", deniedReason)
+  }
+
   function handleNewCard() {
     assignCard(member.id, cardId)
   }
@@ -110,7 +114,7 @@ const MemberModal = ({ selectedMember, onClose }) => {
           </ModalBody>
           <ModalFooter>
             <Flex gap={4}>
-              {denied ? <Button>Submit Reason</Button> : null}
+              {denied ? <Button onClick={handleDenialNote}>Submit Reason</Button> : null}
               {newCard ? <Button onClick={handleNewCard}>Submit</Button> : null}
               {checkComplete || denied ? null : (
                 <>
