@@ -72,9 +72,9 @@ const MemberModal = ({ selectedMember, onClose }) => {
           <ModalCloseButton />
           <ModalBody>
             {member && (<>
-              <Flex justifyContent={"center"} alignItems={"center"} gap={5}>
+              <Flex justifyContent={"center"} alignItems={"center"} gap={5} flexWrap={"wrap"}>
                 {/* Left Hand Side */}
-                <Image src='gibbresh.png' fallbackSrc='https://via.placeholder.com/300' />
+                <Image src={member.photoURL} fallbackSrc='https://via.placeholder.com/300' w={300} h={300}/>
                 {/* Right Hand Side */}
                 <VStack>
                   <Text>Name: {useCapitalise(member.firstName)} {useCapitalise(member.surname)}</Text >
@@ -114,7 +114,7 @@ const MemberModal = ({ selectedMember, onClose }) => {
             </>)}
           </ModalBody>
           <ModalFooter>
-            <Flex gap={4}>
+            <Flex gap={4} flexWrap={"wrap"}>
               {denied ? <Button onClick={handleDenialNote}>Submit Reason</Button> : null}
               {newCard ? <Button onClick={handleNewCard}>Submit</Button> : null}
               {checkComplete || denied ? null : (

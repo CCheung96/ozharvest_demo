@@ -158,7 +158,7 @@ function SearchPage() {
               onClick={() => handleOpenModal(member)}>
               <Flex justifyContent={"center"} alignItems={"center"} gap={5}>
                 {/*Left Hand Side */}
-                <Image src='gibbresh.png' fallbackSrc='https://via.placeholder.com/100' />
+                <Image src={member.photoURL} fallbackSrc='https://via.placeholder.com/100' w={100} h={100}/>
                 {/*Right Hand Side */}
                 <VStack spacing={4}>
                   <Text>Name: {useCapitalise(member.firstName)} {useCapitalise(member.surname)}</Text>

@@ -1,20 +1,21 @@
-import React from 'react'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { auth, firestore } from "../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import useShowToast from "./useShowToast";
 import useCreateVisit from './useCreateVisit';
+import useUploadPhoto from './useUploadPhoto';
 
 const useSignUp = () => {
-  const [createUserWithEmailAndPassword, , loading, error] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, loading, error] = useCreateUserWithEmailAndPassword(auth);
   const createVisit = useCreateVisit();
+  const { uploadPhoto, isUpdating } = useUploadPhoto();
   const showToast = useShowToast();
 
   async function firstVisit(memberId) {
     createVisit(memberId);
   }
 
-  async function signup(inputs) {
+  async function signup(inputs, selectedFile) {
     if (!inputs.firstName || !inputs.surname || !inputs.birthDate ||
       !inputs.postcode || !inputs.language || !inputs.nationality ||
       !inputs.maritalStatus) {
@@ -33,8 +34,6 @@ const useSignUp = () => {
         birthYear = dob[0]
       }
 
-      // TODO: Implement photo storage
-
       // Create and add the member document
       const memberDoc = {
         firstName: inputs.firstName.toLowerCase(),
@@ -45,7 +44,6 @@ const useSignUp = () => {
         language: inputs.language.toLowerCase(),
         nationality: inputs.nationality.toLowerCase(),
         maritalStatus: inputs.maritalStatus.toLowerCase(),
-        photo: inputs.photo,
         emailAddress: inputs.emailAddress.toLowerCase(),
         mobilePhoneNumber: inputs.mobilePhoneNumber,
         createdAt: Date.now(),
@@ -54,12 +52,24 @@ const useSignUp = () => {
       const docRef = await addDoc(collection(firestore, "members"), memberDoc);
       // Show success toast when member is added successfully
       showToast("Membership Created", "Member added successfully", "success");
+      // Upload photo to DB 
+      if (inputs.photoInDb) {
+        try {
+          await uploadPhoto(docRef, selectedFile, memberDoc)
+          // await uploadPhoto(docRef, selectedFile)
+        } catch (error) {
+          showToast("Error Uploading Photo", error.message, "error")
+        }
+      }
+
       // Create a visit record for the new member
       firstVisit(docRef.id)
+
     } catch (error) {
       showToast("Error Creating Membership", error.message, "error");
     }
   }
+
   return { loading, error, signup }
 }
 export default useSignUp;

@@ -1,11 +1,12 @@
 // SignUpPage.js
-import React from 'react';
+import { useState, useRef } from 'react';
 import {
   Box, FormControl, FormLabel, Input, Button, VStack, Heading, Checkbox,
-  Flex, Container
+  Flex, Container, Image
 } from '@chakra-ui/react';
-import { useState } from 'react';
+
 import useSignUp from '../hooks/useSignUp';
+import usePreviewImg from '../hooks/usePreviewImg';
 
 function SignUpPage() {
   const [inputs, setInputs] = useState({
@@ -17,17 +18,19 @@ function SignUpPage() {
     language: '',
     nationality: '',
     maritalStatus: '',
-    photo: '',
     photoOnCard: false,
     photoInDb: false,
     emailAddress: '',
     mobilePhoneNumber: ''
   });
-
+  const photoRef = useRef(null);
+  const {handleImageChange, selectedFile, setSelectedFile} = usePreviewImg();
   const { loading, error, signup } = useSignUp();
 
+
   const handleAuth = () => {
-    signup(inputs)
+    console.log(inputs);
+    signup(inputs, selectedFile)
   };
 
   return (
@@ -86,9 +89,14 @@ function SignUpPage() {
               </FormControl>
               <FormControl id="photo">
                 <FormLabel>Photo</FormLabel>
+                <Flex alignItems={"end"} gap={4} flexWrap={"wrap"}>
+                <Image src={selectedFile} fallbackSrc='https://via.placeholder.com/150' w={"150px"} h={"150px"}/>
+                <Button onClick={() => photoRef.current.click()}>Add Photo</Button>
                 <Input type="file"
+                  hidden
+                  ref={photoRef}
                   value={inputs.photo}
-                  onChange={(e) => setInputs({ ...inputs, photo: e.target.value })} />
+                  onChange={handleImageChange} /></Flex>
                 <Flex justifyContent={"center"} gap={4}>
                 <Checkbox id="photoOnCard"
                   onChange={(e) => setInputs({ ...inputs, photoOnCard: e.target.checked })}>
