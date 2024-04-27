@@ -1,5 +1,5 @@
 // SearchPage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { firestore } from '../firebase/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import {
@@ -8,41 +8,88 @@ import {
 } from '@chakra-ui/react';
 import MemberModal from '../components/Modal/MemberModal';
 import useBirthdayFormatter from '../hooks/useBirthdayFormatter';
+import useShowToast from '../hooks/useShowToast';
 
 function SearchPage() {
   // A list of possible search criteria
-  const searchOptions = [
-    { value: 'firstName', label: 'First Name' },
+  const [searchOptions, setSearchOptions] = useState([
+    // { value: 'firstName', label: 'First Name' },
     { value: 'surname', label: 'Surname' },
     { value: 'birthDay', label: 'Birth Day (Year not included)' },
-    { value: 'birthDate', label: 'Birth Date' },
+    { value: 'birthYear', label: 'Birth Year' },
     { value: 'postcode', label: 'Postcode' },
     { value: 'language', label: 'Language' },
     { value: 'nationality', label: 'Nationality' },
     { value: 'maritalStatus', label: 'Marital Status' },
     { value: 'email', label: 'Email' },
     { value: 'mobilePhoneNumber', label: 'Mobile Phone Number' },
-  ];
-  // const [selectedCriteria, setSelectedCriteria] = useState(["firstName"]);
-  // const [searchInputs, setSearchInputs] = useState([]);
+  ]);
+  const [searchInputs, setSearchInputs] = useState({
+    "firstName": ""
+  });
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchCriteria, setSearchCriteria] = useState(searchOptions[0].value); // Default search criteria
+  const [selectedCriteria, setSelectedCriteria] = useState([
+    {value: "firstName", label: "First Name"}
+  ]);
+  const [selectedOption, setSelectedOption] = useState(searchOptions[0]); // Default search criteria
   const [searchResults, setSearchResults] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null); // Member selected for modal display
 
   const formattedBday = useBirthdayFormatter();
+  const showToast = useShowToast();
+
+  const handleAddToCriteria = () => {
+    setSelectedCriteria([
+      ...selectedCriteria,
+      selectedOption
+    ]);
+
+    setSearchInputs(prevState => ({
+      ...prevState,
+      [selectedOption.value] : "",
+    }));
+    
+    // Remove the selected criterion from searchOptions
+    setSearchOptions(prevOptions => (
+      prevOptions.filter(option => option.value !== selectedOption.value)
+    ));
+      console.log(searchOptions);
+    setSelectedOption(searchOptions[0]);
+
+  }
+
+    useEffect(() => {
+    // Update selected option after searchOptions have been updated
+    setSelectedOption(searchOptions[0]);
+  }, [searchOptions]);
+
+    // Function to update input values for criteria dynamically
+  const handleInputChange = (key, value) => {
+    setSearchInputs(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+    console.log(searchInputs);
+  };
 
   const handleSearch = async () => {
     try {
-      console.log(searchCriteria, searchTerm)
+      console.log(searchInputs);
       // Create a Firestore query to search for members based on the provided search term and criteria
-      const q = query(
-        collection(firestore, 'members'),
-        where(searchCriteria, '==', searchTerm)
-      );
+      let firestoreQuery = collection(firestore, 'members');
+
+          // Iterate over each key-value pair in searchInputs
+    Object.entries(searchInputs).forEach(([key, value]) => {
+      // If the value is not empty, add a where clause to the query
+      if (value.trim() !== "") {
+        const searchValue = value.charAt(0).toUpperCase() + value.slice(1);
+        console.log(searchValue);
+        firestoreQuery = query(firestoreQuery, where(key, '==', searchValue));
+      }
+    });
 
       // Execute the query
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(firestoreQuery);
 
       // Extract search results from the query snapshot
       const results = [];
@@ -52,7 +99,8 @@ function SearchPage() {
 
       setSearchResults(results);
     } catch (error) {
-      console.error('Error searching for members:', error);
+      console.error('Error searching for members:', error)
+      showToast('Error searching for members:', error.message, "error");
     }
   };
 
@@ -72,20 +120,25 @@ function SearchPage() {
         <VStack spacing={4}>
           <FormLabel>Search By:</FormLabel>
           <Select
-            value={searchCriteria}
-            onChange={(e) => setSearchCriteria(e.target.value)}
+            value={selectedOption.value}
+            onChange={(e) => setSelectedOption(e.target.value)}
           >
             {/* Dropdown list of search criteria */}
             {searchOptions.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
+              <option key={option.value} value={option}>{option.label}</option>
             ))}
           </Select>
+          <Button onClick={handleAddToCriteria}>Add to Criteria</Button>
+          {selectedCriteria.map(({value, label}) => (
           <Input
+            key={value}
             type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={`Search by ${searchCriteria}`}
-          />
+            value={searchInputs[value] || ''}
+            onChange={(e) => handleInputChange(value, e.target.value)}
+            placeholder={`Search by ${label}`}
+          />            
+          ))}
+
           <Button onClick={handleSearch}>Search</Button>
         </VStack>
       </Box>
