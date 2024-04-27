@@ -13,7 +13,13 @@ const useBirthdayFormatter = () => {
     const suffixes = ['st', 'nd', 'rd'];
     const daySuffix = (day > 10 && day < 20) ? 'th' : suffixes[day % 10 - 1] || 'th';
 
-    return `${parseInt(day)}${daySuffix} ${months[parseInt(month) - 1]}`;
+    let reformattedBirthday = `${parseInt(day)}${daySuffix} ${months[parseInt(month) - 1]}`
+
+    if(birthYear){
+      reformattedBirthday += `, ${birthYear}`
+    }
+
+    return reformattedBirthday;
   }
 
   return formattedBirthday;

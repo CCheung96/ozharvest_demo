@@ -27,14 +27,6 @@ function SignUpPage() {
   const { loading, error, signup } = useSignUp();
 
   const handleAuth = () => {
-    console.log("inputs", inputs);
-    // if (!inputs.firstName || !inputs.surname || !inputs.birthDate ||
-    //   !inputs.postcode || !inputs.language || !inputs.nationality ||
-    //   !inputs.maritalStatus) {
-    //   alert("Please fill in all the fields");
-    //   return;
-    // }
-
     signup(inputs)
   };
 
@@ -63,7 +55,7 @@ function SignUpPage() {
                   value={inputs.birthDate}
                   onChange={(e) => setInputs({ ...inputs, birthDate: e.target.value })} />
                 <Checkbox id="includeYear"
-                  onChange={(e) => setInputs({ ...inputs, includeYear: e.target.value })}>
+                  onChange={(e) => setInputs({ ...inputs, includeYear: e.target.checked })}>
                   Include Year?
                 </Checkbox>
               </FormControl>
@@ -99,11 +91,11 @@ function SignUpPage() {
                   onChange={(e) => setInputs({ ...inputs, photo: e.target.value })} />
                 <Flex justifyContent={"center"} gap={4}>
                 <Checkbox id="photoOnCard"
-                  onChange={(e) => setInputs({ ...inputs, photoOnCard: e.target.value })}>
+                  onChange={(e) => setInputs({ ...inputs, photoOnCard: e.target.checked })}>
                   Add Photo to Card
                 </Checkbox>
                 <Checkbox id="photoinDB"
-                  onChange={(e) => setInputs({ ...inputs, photoInDb: e.target.value })}>
+                  onChange={(e) => setInputs({ ...inputs, photoInDb: e.target.checked })}>
                   Add Photo to Database
                 </Checkbox></Flex>
               </FormControl>

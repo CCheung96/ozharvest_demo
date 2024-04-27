@@ -28,7 +28,7 @@ const useSignUp = () => {
       const dob = dateInput.split("-"); // Split the string by "-"
       const birthDay = `${dob[1]}-${dob[2]}`; // Concatenate the month and day parts fo DOB
       // Determine birthYear based on includeYear boolean
-      const birthYear = null
+      let birthYear = null
       if (inputs.includeYear) {
         birthYear = dob[0]
       }
@@ -37,16 +37,16 @@ const useSignUp = () => {
 
       // Create and add the member document
       const memberDoc = {
-        firstName: inputs.firstName,
-        surname: inputs.surname,
+        firstName: inputs.firstName.toLowerCase(),
+        surname: inputs.surname.toLowerCase(),
         birthDay: birthDay,
         birthYear: birthYear,
         postcode: inputs.postcode,
-        language: inputs.language,
-        nationality: inputs.nationality,
-        maritalStatus: inputs.maritalStatus,
+        language: inputs.language.toLowerCase(),
+        nationality: inputs.nationality.toLowerCase(),
+        maritalStatus: inputs.maritalStatus.toLowerCase(),
         photo: inputs.photo,
-        emailAddress: inputs.emailAddress,
+        emailAddress: inputs.emailAddress.toLowerCase(),
         mobilePhoneNumber: inputs.mobilePhoneNumber,
         createdAt: Date.now(),
       };

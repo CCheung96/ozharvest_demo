@@ -10,6 +10,7 @@ import useShowToast from '../../hooks/useShowToast';
 import useAssignCard from '../../hooks/useAssignCard';
 import useSubmitNote from '../../hooks/useSubmitNote';
 import useBirthdayFormatter from '../../hooks/useBirthdayFormatter';
+import useCapitalise from '../../hooks/useCapitalise';
 
 
 const MemberModal = ({ selectedMember, onClose }) => {
@@ -76,12 +77,12 @@ const MemberModal = ({ selectedMember, onClose }) => {
                 <Image src='gibbresh.png' fallbackSrc='https://via.placeholder.com/300' />
                 {/* Right Hand Side */}
                 <VStack>
-                  <Text>Name: {member.firstName} {member.surname}</Text >
+                  <Text>Name: {useCapitalise(member.firstName)} {useCapitalise(member.surname)}</Text >
                   <Text>Born: {formattedBirthday(member.birthDay, member.birthYear)} </Text>
                   <Text>Postcode: {member.postcode}</Text>
-                  <Text>Preferred Language: {member.language}</Text>
-                  <Text>Nationality: {member.nationality}</Text>
-                  <Text>Marital Status: {member.maritalStatus}</Text>
+                  <Text>Preferred Language: {useCapitalise(member.language)}</Text>
+                  <Text>Nationality: {useCapitalise(member.nationality)}</Text>
+                  <Text>Marital Status: {useCapitalise(member.maritalStatus)}</Text>
                   <Text>Email: {member.emailAddress || "Not Provided"}</Text>
                   <Text>Mobile Phone Number: {member.mobilePhoneNumber || "Not Provided"}</Text>
                 </VStack>
