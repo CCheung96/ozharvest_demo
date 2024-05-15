@@ -16,5 +16,10 @@ This is where customers can be searched up based on a selection of criteria. In 
 The Member Modal contains the rest of a member's details along buttons:
 - Confirm: Press this button after confirming the customer's identity to check them into the store. If the member had not visited within the same week, their visit will be recorded in firebase and the staff can let them in. If the member had visited, a message will appear indicating that the member is a repeat visitor and a note will automatically be recorded in firebase.
 - Deny: Press this button if the person asking for admittance claims to be this member but their details do not match up. Pressing this button allow the staff to write the reason for denying this person. (You cannot submit a note yet)
-- Add Card: Press this to assign a new card to the customer using the card's ID. Currently, you can add as many card as you wish but the older cards are not dleted or deactivated.
+- Add Card: Press this to assign a new card to the customer using the card's ID. Currently, you can add as many card as you wish but the older cards are not deleted or deactivated.
 - Close: This is to close the Modal. Closing and reopening the Modal will refresh the settings. 
+
+## What has not been implemented yet
+- a decent-looking homepage
+- staff authorisation (atm the app is open to anyone)
+- nfc scanning capabilities

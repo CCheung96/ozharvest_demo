@@ -115,7 +115,7 @@ function SignUpPage() {
               </FormControl>
               <FormControl id="phone">
                 <FormLabel>Mobile Phone Number</FormLabel>
-                <Input type="text"
+                <Input type="tel"
                   value={inputs.mobilePhoneNumber}
                   onChange={(e) => setInputs({ ...inputs, mobilePhoneNumber: e.target.value })} />
               </FormControl>

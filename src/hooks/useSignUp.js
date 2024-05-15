@@ -6,6 +6,7 @@ import useCreateVisit from './useCreateVisit';
 import useUploadPhoto from './useUploadPhoto';
 
 const useSignUp = () => {
+  // useCreateUserWithEmailAndPassword is not used 
   const [createUserWithEmailAndPassword, loading, error] = useCreateUserWithEmailAndPassword(auth);
   const createVisit = useCreateVisit();
   const { uploadPhoto, isUpdating } = useUploadPhoto();
@@ -53,7 +54,7 @@ const useSignUp = () => {
       // Show success toast when member is added successfully
       showToast("Membership Created", "Member added successfully", "success");
       // Upload photo to DB 
-      if (inputs.photoInDb) {
+      if (selectedFile && inputs.photoInDb) {
         try {
           await uploadPhoto(docRef, selectedFile, memberDoc)
           // await uploadPhoto(docRef, selectedFile)
