@@ -9,9 +9,9 @@ import {
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // Components
+import HomePage from './pages/HomePage';
 import SignUpPage from './pages/SignUpPage';
 import SearchPage from './pages/SearchPage';
-import Navbar from './components/Navbar/Navbar';
 
 
 
@@ -26,12 +26,6 @@ function App() {
   </>
 
   );
-}
-
-function HomePage() {
-  return <div>
-    <Navbar/>
-    Home Page Content</div>;
 }
 
 export default App;
